@@ -63,17 +63,17 @@ public class PercolationStats {
         return (double) openSites / (n * n);
     }
 
-    public static void main(String[] args) {
-        int n = 100; //Integer.parseInt(args[0]);
-        int trials = 100; //Integer.parseInt(args[1]);
-        
-        Stopwatch sw = new Stopwatch();
-        PercolationStats stats = new PercolationStats(n, trials);
-        System.out.printf("time elapsed            = %f \n\n", sw.elapsedTime());
-        
-        System.out.printf("mean                    = %f \n", stats.mean());
-        System.out.printf("stddev                  = %f \n", stats.stddev());
-        System.out.printf("95%% confidence interval = %f, %f \n",
-                stats.confidenceLo(), stats.confidenceHi());
-    }
+//    public static void main(String[] args) {
+//        int n = 100; //Integer.parseInt(args[0]);
+//        int trials = 100; //Integer.parseInt(args[1]);
+//        
+//        Stopwatch sw = new Stopwatch();
+//        PercolationStats stats = new PercolationStats(n, trials);
+//        System.out.printf("time elapsed            = %f \n\n", sw.elapsedTime());
+//        
+//        System.out.printf("mean                    = %f \n", stats.mean());
+//        System.out.printf("stddev                  = %f \n", stats.stddev());
+//        System.out.printf("95%% confidence interval = %f, %f \n",
+//                stats.confidenceLo(), stats.confidenceHi());
+//    }
 }
