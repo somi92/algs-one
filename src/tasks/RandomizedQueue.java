@@ -17,7 +17,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private Item[] queue;
     private int n;
-    
+
     public RandomizedQueue() {
         queue = (Item[]) new Object[1];
         n = 0;
@@ -32,28 +32,33 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public void enqueue(Item item) {
-        if(item == null)
+        if (item == null) {
             throw new NullPointerException();
-        if(n == queue.length)
+        }
+        if (n == queue.length) {
             resize(2 * queue.length);
+        }
         queue[n++] = item;
     }
 
     public Item dequeue() {
-        if(isEmpty())
+        if (isEmpty()) {
             throw new NoSuchElementException();
+        }
         int index = StdRandom.uniform(n);
         Item item = queue[index];
         queue[index] = queue[--n];
         queue[n] = null;
-        if(n > 0 && n == queue.length/4)
-            resize(queue.length/2);
+        if (n > 0 && n == queue.length / 4) {
+            resize(queue.length / 2);
+        }
         return item;
     }
 
     public Item sample() {
-        if(isEmpty())
+        if (isEmpty()) {
             throw new NoSuchElementException();
+        }
         int index = StdRandom.uniform(n);
         return queue[index];
     }
@@ -65,26 +70,27 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public static void main(String[] args) {
 
     }
-    
+
     private void resize(int capacity) {
         Item[] newQueue = (Item[]) new Object[capacity];
-        for(int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             newQueue[i] = queue[i];
+        }
         queue = newQueue;
     }
-    
+
     private class RandomizedQueueIterator implements Iterator<Item> {
-        
+
         private int[] randomIndexes = new int[n];
         private int current = 0;
-        
+
         public RandomizedQueueIterator() {
-            for(int i=0; i<randomIndexes.length; i++) {
+            for (int i = 0; i < randomIndexes.length; i++) {
                 randomIndexes[i] = i;
             }
             StdRandom.shuffle(randomIndexes);
         }
-        
+
         @Override
         public boolean hasNext() {
             return current < n;

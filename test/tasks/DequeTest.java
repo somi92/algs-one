@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tests;
+package tasks;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -13,37 +13,36 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import tasks.Deque;
 
 /**
  *
  * @author milos
  */
 public class DequeTest {
-    
+
     private Deque<Integer> deque;
-    
+
     public DequeTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
         deque = new Deque<>();
     }
-    
+
     @After
     public void tearDown() {
         deque = null;
     }
-    
+
     @Test
     public void testAddFirstBasic() {
         assertTrue(deque.isEmpty());
@@ -55,13 +54,13 @@ public class DequeTest {
         assertTrue(deque.size() == 2);
         assertFalse(deque.isEmpty());
     }
-    
+
     @Test(expected = NullPointerException.class)
     public void testAddFirstException() {
         deque.addFirst(null);
         assertTrue(deque.isEmpty());
     }
-    
+
     @Test
     public void testAddLastBasic() {
         assertTrue(deque.isEmpty());
@@ -73,13 +72,13 @@ public class DequeTest {
         assertTrue(deque.size() == 2);
         assertFalse(deque.isEmpty());
     }
-    
+
     @Test(expected = NullPointerException.class)
     public void testAddLastException() {
         deque.addLast(null);
         assertTrue(deque.isEmpty());
     }
-    
+
     @Test
     public void testRemoveFirstBasic() {
         deque.addFirst(1);
@@ -95,15 +94,15 @@ public class DequeTest {
         assertTrue(deque.removeFirst() == 1);
         assertTrue(deque.isEmpty());
         assertTrue(deque.size() == 0);
-        
+
     }
-    
+
     @Test(expected = NoSuchElementException.class)
     public void testRemoveFirstException() {
         deque.removeFirst();
         assertTrue(deque.isEmpty());
     }
-    
+
     @Test
     public void testRemoveLastBasic() {
         deque.addLast(1);
@@ -119,43 +118,43 @@ public class DequeTest {
         assertTrue(deque.removeLast() == 1);
         assertTrue(deque.isEmpty());
         assertTrue(deque.size() == 0);
-        
+
     }
-    
+
     @Test(expected = NoSuchElementException.class)
     public void testRemoveLastException() {
         deque.removeLast();
         assertTrue(deque.isEmpty());
     }
-    
+
     @Test
     public void testAddFirstRemoveLast() {
-        for(int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             deque.addFirst(i);
         }
         assertFalse(deque.isEmpty());
         assertTrue(deque.size() == 10);
-        for(int j=0; j<10; j++) {
+        for (int j = 0; j < 10; j++) {
             assertTrue(deque.removeLast() == j);
         }
         assertTrue(deque.isEmpty());
         assertTrue(deque.size() == 0);
     }
-    
+
     @Test
     public void testAddLastRemoveFirst() {
-        for(int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             deque.addLast(i);
         }
         assertFalse(deque.isEmpty());
         assertTrue(deque.size() == 10);
-        for(int j=0; j<10; j++) {
+        for (int j = 0; j < 10; j++) {
             assertTrue(deque.removeFirst() == j);
         }
         assertTrue(deque.isEmpty());
         assertTrue(deque.size() == 0);
     }
-    
+
     @Test
     public void testNonEmptyEmpty() {
         deque.addLast(1);
@@ -163,28 +162,28 @@ public class DequeTest {
         deque.addLast(3);
         assertFalse(deque.isEmpty());
         assertTrue(deque.size() == 3);
-        
+
         assertTrue(deque.removeFirst() == 1);
         assertTrue(deque.removeFirst() == 2);
         assertTrue(deque.removeFirst() == 3);
         assertTrue(deque.isEmpty());
         assertTrue(deque.size() == 0);
-        
+
         deque.addFirst(1);
         assertFalse(deque.isEmpty());
         assertTrue(deque.size() == 1);
-        
+
         assertTrue(deque.removeLast() == 1);
         assertTrue(deque.isEmpty());
         assertTrue(deque.size() == 0);
     }
-    
+
     @Test(expected = UnsupportedOperationException.class)
     public void iteratorRemoveExceptionTest() {
         deque.iterator().remove();
         assertTrue(deque.isEmpty());
     }
-    
+
     @Test
     public void iteratorHasNextTest() {
         deque.addFirst(1);
@@ -194,14 +193,14 @@ public class DequeTest {
         itr = deque.iterator();
         assertFalse(itr.hasNext());
     }
-    
+
     @Test(expected = NoSuchElementException.class)
     public void iteratorNextExceptionTest() {
         Iterator<Integer> itr = deque.iterator();
         assertFalse(itr.hasNext());
         itr.next();
     }
-    
+
     @Test(expected = NoSuchElementException.class)
     public void iteratorNextTest() {
         deque.addFirst(1);
@@ -213,7 +212,7 @@ public class DequeTest {
         assertTrue(itr.next() == 1);
         itr.next();
     }
-    
+
     @Test
     public void iteratorHasNextNextTest() {
         deque.addLast(1);
@@ -223,8 +222,33 @@ public class DequeTest {
         deque.addLast(5);
         Iterator<Integer> itr = deque.iterator();
         int i = 1;
-        while(itr.hasNext()) {
+        while (itr.hasNext()) {
             assertTrue(itr.next() == i++);
+        }
+    }
+
+    @Test
+    public void iteratorIndependenceTest() {
+        deque.addLast(1);
+        deque.addLast(2);
+        deque.addLast(3);
+        deque.addLast(4);
+        deque.addLast(5);
+        Iterator<Integer> itr1 = deque.iterator();
+        Iterator<Integer> itr2 = deque.iterator();
+        int i1 = 0;
+        while (itr1.hasNext()) {
+            int num1 = itr1.next();
+            int i2 = 0;
+            while (itr2.hasNext()) {
+                int num2 = itr2.next();
+                if(i1 == i2)
+                    assertTrue(num1 == num2);
+                else
+                    assertFalse(num1 == num2);
+                ++i2;
+            }
+            ++i1;
         }
     }
 }
