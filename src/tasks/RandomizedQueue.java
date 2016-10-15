@@ -66,11 +66,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public Iterator<Item> iterator() {
         return new RandomizedQueueIterator();
     }
-
-    public static void main(String[] args) {
-
-    }
-
+    
     private void resize(int capacity) {
         Item[] newQueue = (Item[]) new Object[capacity];
         for (int i = 0; i < n; i++) {

@@ -97,7 +97,4 @@ public class Percolation {
         if(value <= 0 || value > n)
             throw new IndexOutOfBoundsException("row index i out of bounds");
     }
-    
-    public static void main(String[] args) {
-    }
 }

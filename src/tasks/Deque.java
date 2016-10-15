@@ -99,10 +99,6 @@ public class Deque<Item> implements Iterable<Item> {
         return new DequeIterator();
     }
 
-    public static void main(String[] args) {
-
-    }
-
     private class Node {
 
         Item item;
