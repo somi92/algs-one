@@ -22,11 +22,14 @@ public class FastCollinearPoints {
         if (points == null) {
             throw new NullPointerException();
         }
-
+        
         List<LineSegment> segmentsList = new ArrayList<>();
         for (int p = 0; p < points.length - 1; p++) {
             if (points[p] == null) {
                 throw new NullPointerException();
+            }
+            if(points[p].toString().equals(points[p + 1].toString())) {
+                throw new IllegalArgumentException();
             }
 
             List<Point> slopedPoints = new ArrayList<>();

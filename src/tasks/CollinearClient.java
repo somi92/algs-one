@@ -27,7 +27,7 @@ public class CollinearClient {
             int y = in.readInt();
             points[i] = new Point(x, y);
         }
-
+        
         // draw the points
         StdDraw.enableDoubleBuffering();
         StdDraw.setXscale(0, 32768);
