@@ -28,11 +28,6 @@ public class BruteCollinearPoints {
             if (points[i] == null) {
                 throw new NullPointerException();
             }
-            if (i > 0) {
-                if (points[i].toString().equals(points[i - 1].toString())) {
-                    throw new IllegalArgumentException();
-                }
-            }
 
             for (int j = i + 1; j < points.length; j++) {
                 double slopeIJ = points[i].slopeTo(points[j]);

@@ -28,9 +28,6 @@ public class FastCollinearPoints {
             if (points[p] == null) {
                 throw new NullPointerException();
             }
-            if(points[p].toString().equals(points[p + 1].toString())) {
-                throw new IllegalArgumentException();
-            }
 
             List<Point> slopedPoints = new ArrayList<>();
             sort(points, p + 1, points.length, points[p].slopeOrder());
