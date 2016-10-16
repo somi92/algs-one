@@ -5,16 +5,13 @@
  */
 package tasks;
 
-import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdOut;
-
 /**
  *
  * @author milos
  */
 public class CollinearClient {
 
+    /*
     public static void main(String[] args) {
         // read the n points from a file
 //        In in = new In(args[0]);
@@ -46,4 +43,5 @@ public class CollinearClient {
         }
         StdDraw.show();
     }
+    */
 }
