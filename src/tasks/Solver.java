@@ -9,6 +9,7 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.StdOut;
 import java.util.Comparator;
+import java.util.Stack;
 
 /**
  *
@@ -17,24 +18,38 @@ import java.util.Comparator;
 public class Solver {
 
     private Node solutionNode;
-    
+
     public Solver(Board initial) {
         MinPQ<Node> priorityQueue = new MinPQ<>(nodeComparator);
         MinPQ<Node> twinPriorityQueue = new MinPQ<>(nodeComparator);
-        
+
+        Node initialNode = new Node(initial, 0, null);
+        priorityQueue.insert(initialNode);
+
+        Node twinInitialNode = new Node(initial.twin(), 0, null);
+        twinPriorityQueue.insert(initialNode);
+
         
     }
 
     public boolean isSolvable() {
-        return false;
+        return solutionNode != null;
     }
 
     public int moves() {
-        return 0;
+        return isSolvable() ? solutionNode.movesMade : -1;
     }
 
     public Iterable<Board> solution() {
-        return null;
+        if (!isSolvable()) {
+            return null;
+        }
+        Stack<Board> nodes = new Stack<>();
+        while(solutionNode != null) {
+            nodes.push(solutionNode.board);
+            solutionNode = solutionNode.parent;
+        }
+        return nodes;
     }
 
     public static void main(String[] args) {
@@ -82,5 +97,19 @@ public class Solver {
         public int compare(Node o1, Node o2) {
             return o1.board.manhattan() - o2.board.manhattan();
         }
-    };      
+    };
+
+    private Node processQueue(MinPQ<Node> queue) {
+        Node minNode = queue.delMin();
+        if (minNode.board.isGoal()) {
+            return minNode;
+        }
+        for (Board neighbor : minNode.board.neighbors()) {
+            if (neighbor != null && !minNode.parent.board.equals(neighbor)) {
+                Node newNode = new Node(neighbor, minNode.movesMade + 1, minNode);
+                queue.insert(newNode);
+            }
+        }
+        return null;
+    }
 }
