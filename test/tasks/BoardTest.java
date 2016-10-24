@@ -40,30 +40,30 @@ public class BoardTest {
     
     @Test
     public void hammingOkTest() {
-        Board b = new Board(generate8Matrix(), 3);
-        assertTrue(b.hamming() == 8);
+        Board b = new Board(generate8Matrix());
+        assertTrue(b.hamming() == 5);
     }
     
     @Test
     public void manhattanOkTest() {
-        Board b = new Board(generate8Matrix(), 3);
-        assertTrue(b.manhattan() == 13);
+        Board b = new Board(generate8Matrix());
+        assertTrue(b.manhattan() == 10);
     }
     
     @Test
     public void isGoalOkTest() {
-        Board initial = new Board(generate8Matrix(), 0);
+        Board initial = new Board(generate8Matrix());
         assertFalse(initial.isGoal());
-        Board goal = new Board(generate8GoalMatrix(), 0);
+        Board goal = new Board(generate8GoalMatrix());
         assertTrue(goal.isGoal());
     }
     
     @Test
     public void equalsTest() {
-        Board initial1 = new Board(generate8Matrix(), 0);
-        Board initial2 = new Board(generate8Matrix(), 0);
-        Board goal1 = new Board(generate8GoalMatrix(), 0);
-        Board goal2 = new Board(generate8GoalMatrix(), 0);
+        Board initial1 = new Board(generate8Matrix());
+        Board initial2 = new Board(generate8Matrix());
+        Board goal1 = new Board(generate8GoalMatrix());
+        Board goal2 = new Board(generate8GoalMatrix());
         assertTrue(initial1.equals(initial1));
         assertTrue(goal1.equals(goal1));
         assertTrue(initial1.equals(initial2));

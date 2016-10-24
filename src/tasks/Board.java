@@ -16,10 +16,8 @@ public class Board {
 
     private int[][] matrix;
     private int n;
-    private int movesMade;
 
-    public Board(int[][] matrix, int movesMade) {
-        this.movesMade = movesMade;
+    public Board(int[][] matrix) {
         this.n = matrix.length;
         this.matrix = new int[matrix.length][matrix.length];
         for (int row = 0; row < this.matrix.length; row++) {
@@ -45,7 +43,7 @@ public class Board {
                         + (correctValue == value || value == 0 ? 0 : 1);
             }
         }
-        return priority + movesMade;
+        return priority;
     }
 
     public int manhattan() {
@@ -60,7 +58,7 @@ public class Board {
                 priority = priority + distance;
             }
         }
-        return priority + movesMade;
+        return priority;
     }
 
     public boolean isGoal() {
@@ -92,7 +90,7 @@ public class Board {
         int tempVal = newMatrix[tempIndex][n - 2];
         newMatrix[tempIndex][n - 2] = newMatrix[tempIndex][n - 1];
         newMatrix[tempIndex][n - 1] = tempVal;
-        return new Board(newMatrix, movesMade);
+        return new Board(newMatrix);
     }
 
     public boolean equals(Object y) {
@@ -142,7 +140,7 @@ public class Board {
             upNeighbor[emptyRow][emptyCol] = upNeighbor[emptyRow - 1][emptyCol];
             upNeighbor[emptyRow - 1][emptyCol] = tempVal;
 
-            neighbors.add(new Board(upNeighbor, movesMade + 1));
+            neighbors.add(new Board(upNeighbor));
         }
 
         // down
@@ -153,7 +151,7 @@ public class Board {
             downNeighbor[emptyRow][emptyCol] = downNeighbor[emptyRow + 1][emptyCol];
             downNeighbor[emptyRow + 1][emptyCol] = tempVal;
 
-            neighbors.add(new Board(downNeighbor, movesMade + 1));
+            neighbors.add(new Board(downNeighbor));
         }
 
         //left
@@ -164,7 +162,7 @@ public class Board {
             leftNeighbor[emptyRow][emptyCol] = leftNeighbor[emptyRow][emptyCol - 1];
             leftNeighbor[emptyRow][emptyCol - 1] = tempVal;
 
-            neighbors.add(new Board(leftNeighbor, movesMade + 1));
+            neighbors.add(new Board(leftNeighbor));
         }
 
         // right
@@ -175,7 +173,7 @@ public class Board {
             rightNeighbor[emptyRow][emptyCol] = rightNeighbor[emptyRow][emptyCol + 1];
             rightNeighbor[emptyRow][emptyCol + 1] = tempVal;
 
-            neighbors.add(new Board(rightNeighbor, movesMade + 1));
+            neighbors.add(new Board(rightNeighbor));
         }
 
         return neighbors;
