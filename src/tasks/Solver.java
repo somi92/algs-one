@@ -28,6 +28,19 @@ public class Solver {
     }
 
     public static void main(String[] args) {
+        
+    }
+    
+    private class Node {
+        
+        private Board board;
+        private int movesMade;
+        private Node parent;
 
+        public Node(Board board, int movesMade, Node parent) {
+            this.board = board;
+            this.movesMade = movesMade;
+            this.parent = parent;
+        }
     }
 }

@@ -5,46 +5,202 @@
  */
 package tasks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author milos
  */
 public class Board {
-    
-    public Board(int[][] blocks) {
-        
+
+    private int[][] matrix;
+    private int n;
+    private int movesMade;
+
+    public Board(int[][] matrix, int movesMade) {
+        this.movesMade = movesMade;
+        this.n = matrix.length;
+        this.matrix = new int[matrix.length][matrix.length];
+        for (int row = 0; row < this.matrix.length; row++) {
+            for (int col = 0; col < this.matrix.length; col++) {
+                this.matrix[row][col] = matrix[row][col];
+            }
+        }
     }
-    
+
     public int dimension() {
-        return 0;
+        return n;
     }
-    
+
     public int hamming() {
-        return 0;
+        int priority = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int value = matrix[i][j];
+                int correctValue
+                        = (i + 1 == n) && (j + 1 == n)
+                                ? 0 : (((i + 1) * n) - (n - (j + 1)));
+                priority = priority
+                        + (correctValue == value || value == 0 ? 0 : 1);
+            }
+        }
+        return priority + movesMade;
     }
-    
+
     public int manhattan() {
-        return 0;
+        int priority = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int value = matrix[i][j];
+                int rowVal = (value - 1) / n;
+                int colVal = (value - 1) - (rowVal * n);
+                int distance = (value == 0)
+                        ? 0 : Math.abs(i - rowVal) + Math.abs(j - colVal);
+                priority = priority + distance;
+            }
+        }
+        return priority + movesMade;
     }
-    
+
     public boolean isGoal() {
-        return false;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int value = matrix[i][j];
+                int correctValue
+                        = (i + 1 == n) && (j + 1 == n)
+                                ? 0 : (((i + 1) * n) - (n - (j + 1)));
+                if (value != correctValue) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
-    
+
     public Board twin() {
-        return null;
+        int[][] newMatrix = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                newMatrix[i][j] = matrix[i][j];
+            }
+        }
+        int tempIndex = 0;
+        if (newMatrix[tempIndex][n - 2] == 0 || newMatrix[tempIndex][n - 1] == 0) {
+            tempIndex = 1;
+        }
+        int tempVal = newMatrix[tempIndex][n - 2];
+        newMatrix[tempIndex][n - 2] = newMatrix[tempIndex][n - 1];
+        newMatrix[tempIndex][n - 1] = tempVal;
+        return new Board(newMatrix, movesMade);
     }
-    
+
     public boolean equals(Object y) {
-        return false;
+        if (y == null) {
+            return false;
+        }
+        if (this.getClass() != y.getClass()) {
+            return false;
+        }
+        if (this == y) {
+            return true;
+        }
+        Board that = (Board) y;
+        if (this.dimension() != that.dimension()) {
+            return false;
+        }
+        for (int i = 0; i < this.dimension(); i++) {
+            for (int j = 0; j < this.dimension(); j++) {
+                if (this.matrix[i][j] != that.matrix[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
-    
+
     public Iterable<Board> neighbors() {
-        return null;
+        int emptyRow = 0;
+        int emptyCol = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == 0) {
+                    emptyRow = i;
+                    emptyCol = j;
+                    break;
+                }
+            }
+        }
+
+        List<Board> neighbors = new ArrayList<>();
+
+        // up
+        if (emptyRow > 0) {
+            int[][] upNeighbor = createDuplicateMatrix();
+
+            int tempVal = upNeighbor[emptyRow][emptyCol];
+            upNeighbor[emptyRow][emptyCol] = upNeighbor[emptyRow - 1][emptyCol];
+            upNeighbor[emptyRow - 1][emptyCol] = tempVal;
+
+            neighbors.add(new Board(upNeighbor, movesMade + 1));
+        }
+
+        // down
+        if (emptyCol < n - 1) {
+            int[][] downNeighbor = createDuplicateMatrix();
+
+            int tempVal = downNeighbor[emptyRow][emptyCol];
+            downNeighbor[emptyRow][emptyCol] = downNeighbor[emptyRow + 1][emptyCol];
+            downNeighbor[emptyRow + 1][emptyCol] = tempVal;
+
+            neighbors.add(new Board(downNeighbor, movesMade + 1));
+        }
+
+        //left
+        if (emptyCol > 0) {
+            int[][] leftNeighbor = createDuplicateMatrix();
+
+            int tempVal = leftNeighbor[emptyRow][emptyCol];
+            leftNeighbor[emptyRow][emptyCol] = leftNeighbor[emptyRow][emptyCol - 1];
+            leftNeighbor[emptyRow][emptyCol - 1] = tempVal;
+
+            neighbors.add(new Board(leftNeighbor, movesMade + 1));
+        }
+
+        // right
+        if (emptyCol < n - 1) {
+            int[][] rightNeighbor = createDuplicateMatrix();
+
+            int tempVal = rightNeighbor[emptyRow][emptyCol];
+            rightNeighbor[emptyRow][emptyCol] = rightNeighbor[emptyRow][emptyCol + 1];
+            rightNeighbor[emptyRow][emptyCol + 1] = tempVal;
+
+            neighbors.add(new Board(rightNeighbor, movesMade + 1));
+        }
+
+        return neighbors;
     }
-    
+
     public String toString() {
-        return null;
+        StringBuilder sbuilder = new StringBuilder(n + " \n ");
+        for (int i = 0; i < dimension(); i++) {
+            for (int j = 0; j < dimension(); j++) {
+                sbuilder.append(matrix[i][j]);
+                sbuilder.append(" ");
+            }
+            sbuilder.append("\n ");
+        }
+
+        return sbuilder.toString();
+    }
+
+    private int[][] createDuplicateMatrix() {
+        int[][] newMatrix = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                newMatrix[i][j] = matrix[i][j];
+            }
+        }
+        return newMatrix;
     }
 }
-
