@@ -20,6 +20,9 @@ public class Solver {
     private Node solutionNode;
 
     public Solver(Board initial) {
+        if (initial == null) {
+            throw new NullPointerException();
+        }
         MinPQ<Node> priorityQueue = new MinPQ<>(nodeComparator);
         MinPQ<Node> twinPriorityQueue = new MinPQ<>(nodeComparator);
 
@@ -29,7 +32,12 @@ public class Solver {
         Node twinInitialNode = new Node(initial.twin(), 0, null);
         twinPriorityQueue.insert(initialNode);
 
-        
+        while (true) {
+            solutionNode = processQueue(priorityQueue);
+            if (solutionNode != null || processQueue(twinPriorityQueue) != null) {
+                return;
+            }
+        }
     }
 
     public boolean isSolvable() {
@@ -45,7 +53,7 @@ public class Solver {
             return null;
         }
         Stack<Board> nodes = new Stack<>();
-        while(solutionNode != null) {
+        while (solutionNode != null) {
             nodes.push(solutionNode.board);
             solutionNode = solutionNode.parent;
         }
@@ -54,7 +62,8 @@ public class Solver {
 
     public static void main(String[] args) {
         // create initial board from file
-        In in = new In(args[0]);
+//        In in = new In(args[0]);
+        In in = new In("puzzle04.txt");
         int n = in.readInt();
         int[][] blocks = new int[n][n];
         for (int i = 0; i < n; i++) {
@@ -100,12 +109,15 @@ public class Solver {
     };
 
     private Node processQueue(MinPQ<Node> queue) {
+        if (queue.isEmpty()) {
+            return null;
+        }
         Node minNode = queue.delMin();
         if (minNode.board.isGoal()) {
             return minNode;
         }
         for (Board neighbor : minNode.board.neighbors()) {
-            if (neighbor != null && !minNode.parent.board.equals(neighbor)) {
+            if (minNode.parent == null || !neighbor.equals(minNode.parent.board)) {
                 Node newNode = new Node(neighbor, minNode.movesMade + 1, minNode);
                 queue.insert(newNode);
             }

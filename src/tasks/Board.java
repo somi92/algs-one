@@ -18,6 +18,9 @@ public class Board {
     private int n;
 
     public Board(int[][] matrix) {
+        if (matrix == null) {
+            throw new NullPointerException();
+        }
         this.n = matrix.length;
         this.matrix = new int[matrix.length][matrix.length];
         for (int row = 0; row < this.matrix.length; row++) {
@@ -144,7 +147,7 @@ public class Board {
         }
 
         // down
-        if (emptyCol < n - 1) {
+        if (emptyRow < n - 1) {
             int[][] downNeighbor = createDuplicateMatrix();
 
             int tempVal = downNeighbor[emptyRow][emptyCol];
