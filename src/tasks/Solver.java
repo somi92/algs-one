@@ -30,7 +30,7 @@ public class Solver {
         priorityQueue.insert(initialNode);
 
         Node twinInitialNode = new Node(initial.twin(), 0, null);
-        twinPriorityQueue.insert(initialNode);
+        twinPriorityQueue.insert(twinInitialNode);
 
         while (true) {
             solutionNode = processQueue(priorityQueue);
@@ -63,7 +63,7 @@ public class Solver {
     public static void main(String[] args) {
         // create initial board from file
 //        In in = new In(args[0]);
-        In in = new In("puzzle04.txt");
+        In in = new In("puzzle3x3-unsolvable.txt");
         int n = in.readInt();
         int[][] blocks = new int[n][n];
         for (int i = 0; i < n; i++) {
