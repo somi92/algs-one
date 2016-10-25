@@ -8,7 +8,6 @@ package tasks;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.StdOut;
-import java.util.Comparator;
 import java.util.Stack;
 
 /**
@@ -23,13 +22,13 @@ public class Solver {
         if (initial == null) {
             throw new NullPointerException();
         }
-        MinPQ<Node> priorityQueue = new MinPQ<>(nodeComparator);
-        MinPQ<Node> twinPriorityQueue = new MinPQ<>(nodeComparator);
+        MinPQ<Node> priorityQueue = new MinPQ<>();
+        MinPQ<Node> twinPriorityQueue = new MinPQ<>();
 
-        Node initialNode = new Node(initial, 0, null);
+        Node initialNode = new Node(initial, 1, null);
         priorityQueue.insert(initialNode);
 
-        Node twinInitialNode = new Node(initial.twin(), 0, null);
+        Node twinInitialNode = new Node(initial.twin(), 1, null);
         twinPriorityQueue.insert(twinInitialNode);
 
         while (true) {
@@ -53,17 +52,17 @@ public class Solver {
             return null;
         }
         Stack<Board> nodes = new Stack<>();
-        while (solutionNode != null) {
-            nodes.push(solutionNode.board);
-            solutionNode = solutionNode.parent;
+        Node currentNode = solutionNode;
+        while (currentNode != null) {
+            nodes.push(currentNode.board);
+            currentNode = currentNode.parent;
         }
         return nodes;
     }
 
     public static void main(String[] args) {
         // create initial board from file
-//        In in = new In(args[0]);
-        In in = new In("puzzle3x3-unsolvable.txt");
+        In in = new In(args[0]);
         int n = in.readInt();
         int[][] blocks = new int[n][n];
         for (int i = 0; i < n; i++) {
@@ -87,7 +86,7 @@ public class Solver {
         }
     }
 
-    private class Node {
+    private class Node implements Comparable<Node> {
 
         private Board board;
         private int movesMade;
@@ -98,15 +97,12 @@ public class Solver {
             this.movesMade = movesMade;
             this.parent = parent;
         }
-    }
-
-    private Comparator<Node> nodeComparator = new Comparator<Solver.Node>() {
 
         @Override
-        public int compare(Node o1, Node o2) {
-            return o1.board.manhattan() - o2.board.manhattan();
+        public int compareTo(Node o) {
+            return (this.board.manhattan() - o.board.manhattan()) + (this.movesMade - o.movesMade);
         }
-    };
+    }
 
     private Node processQueue(MinPQ<Node> queue) {
         if (queue.isEmpty()) {
