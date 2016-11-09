@@ -7,6 +7,8 @@ package tasks;
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -35,17 +37,17 @@ public class KdTree {
     public void insert(Point2D p) {
         Node currentNode = root;
         Node newNode = new Node(p);
-        
+
         while (currentNode != null) {
             if (currentNode.point.equals(newNode.point)) {
                 return;
             }
 
             if (currentNode.type == X_COOR) {
-                
-                if (currentNode.point.x() < newNode.point.x()) {
+
+                if (currentNode.point.x() > newNode.point.x()) {
                     // go to the left
-                    if(currentNode.left == null) {
+                    if (currentNode.left == null) {
                         // add new node to the left, increment size
                         newNode.type = Y_COOR;
                         currentNode.left = newNode;
@@ -55,7 +57,7 @@ public class KdTree {
                     currentNode = currentNode.left;
                 } else {
                     // go to the right
-                    if(currentNode.right == null) {
+                    if (currentNode.right == null) {
                         // add new node to the right, increment size
                         newNode.type = Y_COOR;
                         currentNode.right = newNode;
@@ -67,10 +69,10 @@ public class KdTree {
             }
 
             if (currentNode.type == Y_COOR) {
-                
-                if (currentNode.point.y() < newNode.point.y()) {
+
+                if (currentNode.point.y() > newNode.point.y()) {
                     // go to the left
-                    if(currentNode.left == null) {
+                    if (currentNode.left == null) {
                         // add new node to the left, increment size
                         newNode.type = X_COOR;
                         currentNode.left = newNode;
@@ -80,7 +82,7 @@ public class KdTree {
                     currentNode = currentNode.left;
                 } else {
                     // go to the right
-                    if(currentNode.right == null) {
+                    if (currentNode.right == null) {
                         // add new node to the right, increment size
                         newNode.type = X_COOR;
                         currentNode.right = newNode;
@@ -91,8 +93,8 @@ public class KdTree {
                 }
             }
         }
-        
-        currentNode = newNode;
+
+        root = newNode;
         size++;
     }
 
@@ -107,12 +109,12 @@ public class KdTree {
 
             if (currentNode.type == X_COOR) {
                 currentNode = currentNode.point.x() < p.x()
-                        ? currentNode.left : currentNode.right;
+                        ? currentNode.right : currentNode.left;
             }
 
             if (currentNode.type == Y_COOR) {
                 currentNode = currentNode.point.y() < p.y()
-                        ? currentNode.left : currentNode.right;
+                        ? currentNode.right : currentNode.left;
             }
         }
         return false;
@@ -123,13 +125,52 @@ public class KdTree {
     }
 
     public Iterable<Point2D> range(RectHV rect) {
-
-        return null;
+        List<Point2D> pointsInRange = new ArrayList<>();
+        range(root, rect, pointsInRange);
+        return pointsInRange;
     }
 
     public Point2D nearest(Point2D p) {
 
         return null;
+    }
+
+    private void range(Node n, RectHV rect, List<Point2D> pointsInRange) {
+        if (n == null) {
+            return;
+        }
+
+        if (rect.contains(n.point)) {
+            pointsInRange.add(n.point);
+        }
+
+        int intersection = intersectsLineSegment(n, rect);
+        if (intersection == 0) {
+            range(n.left, rect, pointsInRange);
+            range(n.right, rect, pointsInRange);
+        } else if (intersection > 0) {
+            range(n.right, rect, pointsInRange);
+        } else if (intersection < 0) {
+            range(n.left, rect, pointsInRange);
+        }
+    }
+
+    private int intersectsLineSegment(Node n, RectHV rect) {
+        if (n.type == X_COOR) {
+            if (rect.xmin() > n.point.x()) {
+                return Integer.MAX_VALUE;
+            } else if (rect.xmax() < n.point.x()) {
+                return Integer.MIN_VALUE;
+            }
+        }
+        if (n.type == Y_COOR) {
+            if (rect.ymin() > n.point.y()) {
+                return Integer.MAX_VALUE;
+            } else if (rect.ymax() < n.point.y()) {
+                return Integer.MIN_VALUE;
+            }
+        }
+        return 0;
     }
 
     private static class Node {
