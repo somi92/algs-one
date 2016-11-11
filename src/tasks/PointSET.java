@@ -18,13 +18,14 @@ import java.util.List;
 public class PointSET {
 
     private SET<Point2D> points;
+    private int size;
 
     public PointSET() {
-        points = new SET<>();
+        points = new SET<Point2D>();
     }
 
     public boolean isEmpty() {
-        return points.isEmpty();
+        return size() == 0;
     }
 
     public int size() {
@@ -71,11 +72,14 @@ public class PointSET {
             throw new NullPointerException();
         }
         Point2D nearestPoint = null;
-        double minDistance = Double.MAX_VALUE;
         for (Point2D point : points) {
-            if (!p.equals(point) && p.distanceSquaredTo(point) <= minDistance) {
+
+            if (nearestPoint == null) {
                 nearestPoint = point;
-                minDistance = p.distanceSquaredTo(point);
+            } else {
+                if (p.distanceSquaredTo(point) < p.distanceSquaredTo(nearestPoint)) {
+                    nearestPoint = point;
+                }
             }
         }
         return nearestPoint;

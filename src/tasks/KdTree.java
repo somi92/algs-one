@@ -7,6 +7,7 @@ package tasks;
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.StdDraw;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +25,10 @@ public class KdTree {
 
     private Point2D nearestPoint;
     private Point2D queryPoint;
-    
+
     public KdTree() {
         root = null;
+        size = 0;
     }
 
     public boolean isEmpty() {
@@ -41,7 +43,13 @@ public class KdTree {
         Node currentNode = root;
         Node newNode = new Node(p);
 
-        while (currentNode != null) {
+        if(root == null) {
+            root = newNode;
+            size += 1;
+            return;
+        }
+        
+        while (true) {
             if (currentNode.point.equals(newNode.point)) {
                 return;
             }
@@ -54,7 +62,7 @@ public class KdTree {
                         // add new node to the left, increment size
                         newNode.type = Y_COOR;
                         currentNode.left = newNode;
-                        size++;
+                        size += 1;
                         return;
                     }
                     currentNode = currentNode.left;
@@ -64,7 +72,7 @@ public class KdTree {
                         // add new node to the right, increment size
                         newNode.type = Y_COOR;
                         currentNode.right = newNode;
-                        size++;
+                        size += 1;
                         return;
                     }
                     currentNode = currentNode.right;
@@ -79,7 +87,7 @@ public class KdTree {
                         // add new node to the left, increment size
                         newNode.type = X_COOR;
                         currentNode.left = newNode;
-                        size++;
+                        size += 1;
                         return;
                     }
                     currentNode = currentNode.left;
@@ -89,16 +97,13 @@ public class KdTree {
                         // add new node to the right, increment size
                         newNode.type = X_COOR;
                         currentNode.right = newNode;
-                        size++;
+                        size += 1;
                         return;
                     }
                     currentNode = currentNode.right;
                 }
             }
         }
-
-        root = newNode;
-        size++;
     }
 
     public boolean contains(Point2D p) {
@@ -111,12 +116,10 @@ public class KdTree {
             }
 
             if (currentNode.type == X_COOR) {
-                currentNode = currentNode.point.x() < p.x()
+                currentNode = currentNode.point.x() <= p.x()
                         ? currentNode.right : currentNode.left;
-            }
-
-            if (currentNode.type == Y_COOR) {
-                currentNode = currentNode.point.y() < p.y()
+            } else if (currentNode.type == Y_COOR) {
+                currentNode = currentNode.point.y() <= p.y()
                         ? currentNode.right : currentNode.left;
             }
         }
@@ -124,7 +127,7 @@ public class KdTree {
     }
 
     public void draw() {
-
+        draw(root, new RectHV(0, 0, 1, 1));
     }
 
     public Iterable<Point2D> range(RectHV rect) {
@@ -217,6 +220,32 @@ public class KdTree {
             }
         }
         return 0;
+    }
+
+    private void draw(Node n, RectHV rect) {
+        if (n == null) {
+            return;
+        }
+
+        StdDraw.setPenRadius(0.01);
+        StdDraw.setPenColor(StdDraw.BLACK);
+        n.point.draw();
+
+        if (n.type == X_COOR) {
+            StdDraw.setPenRadius();
+            StdDraw.setPenColor(StdDraw.RED);
+            StdDraw.line(n.point.x(), rect.ymin(), n.point.x(), rect.ymax());
+
+            draw(n.left, new RectHV(rect.xmin(), rect.ymin(), n.point.x(), rect.ymax()));
+            draw(n.right, new RectHV(n.point.x(), rect.ymin(), rect.xmax(), rect.ymax()));
+        } else if (n.type == Y_COOR) {
+            StdDraw.setPenRadius();
+            StdDraw.setPenColor(StdDraw.BLUE);
+            StdDraw.line(rect.xmin(), n.point.y(), rect.xmax(), n.point.y());
+
+            draw(n.left, new RectHV(rect.xmin(), rect.ymin(), rect.xmax(), n.point.y()));
+            draw(n.right, new RectHV(rect.xmin(), n.point.y(), rect.xmax(), rect.ymax()));
+        }
     }
 
     private static class Node {
